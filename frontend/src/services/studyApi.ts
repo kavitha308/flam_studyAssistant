@@ -37,11 +37,16 @@ export async function generateStudyMaterial(
     try {
       json = rawText ? JSON.parse(rawText) : {};
     } catch {
+      const isHtmlError = rawText.includes('<!DOCTYPE') || rawText.includes('<html');
+      const msg = isHtmlError
+        ? `Backend service error (HTTP ${response.status}). Please verify GEMINI_API_KEY is configured in your Render Dashboard environment variables.`
+        : "We couldn't reach the study service. Please try again.";
+
       return {
         success: false,
         error: {
-          code: 'SERVER_ERROR',
-          message: `We couldn't reach the study service. Please try again.`,
+          code: response.status >= 500 ? `SERVER_ERROR_${response.status}` : 'SERVER_ERROR',
+          message: msg,
         },
       };
     }
