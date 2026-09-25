@@ -32,7 +32,7 @@ export async function generateStudyMaterial(
     });
 
     const rawText = await response.text();
-    let json: StudyApiResponse;
+    let json: any;
 
     try {
       json = rawText ? JSON.parse(rawText) : {};
@@ -47,21 +47,31 @@ export async function generateStudyMaterial(
     }
 
     if (!response.ok || !json.success) {
-      if (!json.error) {
-        let defaultMsg = 'An error occurred while generating study material.';
-        let code = `HTTP_${response.status}`;
+      const serverMsg =
+        json?.error?.message ||
+        (typeof json?.message === 'string' ? json.message : null) ||
+        (typeof json?.error === 'string' ? json.error : null);
 
-        if (response.status === 400) defaultMsg = 'Please enter a valid study topic or notes.';
-        else if (response.status === 429) defaultMsg = 'Rate limit exceeded. Please wait a moment and try again.';
-        else if (response.status === 504) defaultMsg = 'The study generation took too long. Please try again.';
-        else if (response.status >= 500) defaultMsg = "We couldn't reach the study service. Please try again.";
-
-        json.error = { code, message: defaultMsg };
-      }
+      const errorCode =
+        json?.error?.code ||
+        (response.status === 400
+          ? 'INVALID_INPUT'
+          : response.status === 429
+          ? 'RATE_LIMIT_EXCEEDED'
+          : response.status === 504
+          ? 'AI_TIMEOUT'
+          : response.ok
+          ? 'SERVER_ERROR'
+          : `HTTP_${response.status}`);
 
       return {
         success: false,
-        error: json.error,
+        error: {
+          code: errorCode,
+          message:
+            serverMsg ||
+            'An error occurred while generating study material. Please try again.',
+        },
       };
     }
 
@@ -85,7 +95,10 @@ export async function generateStudyMaterial(
       };
     }
 
-    return json;
+    return {
+      success: true,
+      data: json.data,
+    };
   } catch (error: any) {
     if (error.name === 'AbortError') {
       throw error;
