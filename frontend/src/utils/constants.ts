@@ -1,4 +1,8 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || '/api').trim().replace(/\/+$/, '');
+export const API_BASE_URL =
+  rawBaseUrl === '/api' || rawBaseUrl.endsWith('/api')
+    ? rawBaseUrl
+    : `${rawBaseUrl}/api`;
 
 export const SAMPLE_TOPICS = [
   'Photosynthesis and Plant Cellular Respiration',
