@@ -21,7 +21,6 @@ router.post('/generate', async (req: Request, res: Response, next: NextFunction)
       return;
     }
 
-    // Extract test scenario if provided via header, query, or body (only active when AI_TEST_MODE=true)
     const testScenario =
       (req.headers['x-ai-test-scenario'] as string) ||
       (req.query.testScenario as string) ||

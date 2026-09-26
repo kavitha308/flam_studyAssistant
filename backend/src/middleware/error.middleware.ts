@@ -7,7 +7,6 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ): void {
-  // Log diagnostic error details on server ONLY
   console.error('[Backend Express Error Handler]:', {
     name: err.name,
     message: err.message,
@@ -25,7 +24,6 @@ export function errorHandler(
     return;
   }
 
-  // Fallback for unhandled unexpected errors (never expose stack traces or raw details)
   res.status(500).json({
     success: false,
     error: {

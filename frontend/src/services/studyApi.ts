@@ -86,7 +86,6 @@ export async function generateStudyMaterial(
       };
     }
 
-    // Defensive Frontend Response Shape Verification
     const data = json.data;
     if (
       !data ||

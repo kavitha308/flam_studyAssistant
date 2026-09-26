@@ -17,7 +17,6 @@ export const StudyInputForm: React.FC = () => {
   const [resultData, setResultData] = useState<StudyMaterial | null>(null);
   const [studyMode, setStudyMode] = useState<StudyMode>('flashcards');
 
-  // AbortController & request counter refs for stale response prevention
   const abortControllerRef = useRef<AbortController | null>(null);
   const currentRequestIdRef = useRef<number>(0);
 
@@ -97,7 +96,6 @@ export const StudyInputForm: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Input Form Section */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -149,7 +147,6 @@ export const StudyInputForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Error Message Card with Try Again button */}
           {status === 'error' && errorDetails && (
             <ErrorMessage
               code={errorDetails.code}
@@ -182,7 +179,6 @@ export const StudyInputForm: React.FC = () => {
         </form>
       </div>
 
-      {/* Loading Skeleton View */}
       {status === 'loading' && (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 text-center space-y-4 animate-pulse">
           <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto">
@@ -197,7 +193,6 @@ export const StudyInputForm: React.FC = () => {
         </div>
       )}
 
-      {/* Success View */}
       {status === 'success' && resultData && (
         <div className="space-y-8 animate-fade-in">
           <StudySummary
@@ -208,7 +203,6 @@ export const StudyInputForm: React.FC = () => {
             onNewTopicClick={handleNewTopicClick}
           />
 
-          {/* Mode Switcher Tabs */}
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
               <button

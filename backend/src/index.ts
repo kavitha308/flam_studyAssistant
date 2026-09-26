@@ -5,7 +5,6 @@ import path from 'path';
 import studyRoutes from './routes/study.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 
-// Load .env from backend directory or root directory
 dotenv.config();
 dotenv.config({ path: path.resolve(process.cwd(), 'backend', '.env') });
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
@@ -23,15 +22,12 @@ app.use(
 
 app.use(express.json());
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'StudyFlow AI Backend API is running' });
 });
 
-// Study routes
 app.use('/api/study', studyRoutes);
 
-// Centralized Error Handling Middleware
 app.use(errorHandler);
 
 app.listen(PORT, () => {

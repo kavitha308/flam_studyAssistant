@@ -59,7 +59,6 @@ export class GeminiService {
 
     let textResponse: string | undefined;
 
-    // Check if Development-Only Failure Simulation Mode is enabled
     const isTestMode = process.env.AI_TEST_MODE === 'true' || process.env.AI_TEST_MODE === '1';
 
     if (isTestMode && testScenario) {
@@ -93,7 +92,6 @@ export class GeminiService {
             cards: [
               {
                 id: 'card-1',
-                // question and answer omitted
               },
             ],
             quiz: [
@@ -121,7 +119,7 @@ export class GeminiService {
               {
                 id: 'quiz-1',
                 question: 'Invalid options count question',
-                options: ['Option A', 'Option B', 'Option C'], // Only 3 options (fails Zod length 4 rule)
+                options: ['Option A', 'Option B', 'Option C'],
                 correctAnswer: 0,
                 explanation: 'Explanation',
               },
@@ -135,17 +133,17 @@ export class GeminiService {
 
         case 'semantic-invalid':
           textResponse = JSON.stringify({
-            title: '', // Empty string title
+            title: '',
             summary: 'Summary',
             cards: [
-              { id: 'c1', question: 'Q1', answer: 'A1' }, // Only 1 card (fails min 3 cards rule)
+              { id: 'c1', question: 'Q1', answer: 'A1' },
             ],
             quiz: [
               {
                 id: 'q1',
                 question: 'Q1',
                 options: ['A', 'B', 'C', 'D'],
-                correctAnswer: 99, // Invalid index outside 0-3
+                correctAnswer: 99,
                 explanation: '',
               },
             ],
@@ -158,7 +156,6 @@ export class GeminiService {
       }
     }
 
-    // If not in test mode or no test scenario was triggered, make the real Gemini API call
     if (textResponse === undefined) {
       const apiKey = this.getApiKey();
       const candidateModels = this.getCandidateModels();
@@ -188,7 +185,6 @@ User Supplied Notes/Topic Data:
 ${trimmedInput}
 """`;
 
-      // 60-second overall timeout limit
       const timeoutMs = 60000;
       let timeoutTimer: NodeJS.Timeout;
 
@@ -296,9 +292,6 @@ ${trimmedInput}
       }
     }
 
-    // MANDATORY VALIDATION PIPELINE (Executes for both real AI and simulated output)
-
-    // Check empty response
     if (!textResponse || textResponse.trim() === '') {
       console.error('[Gemini Error]: Received empty text response from AI');
       throw new StudyApiError(
@@ -308,7 +301,6 @@ ${trimmedInput}
       );
     }
 
-    // Step 1: Parse JSON safely
     let parsedJson: unknown;
     try {
       parsedJson = JSON.parse(textResponse);
@@ -321,7 +313,6 @@ ${trimmedInput}
       );
     }
 
-    // Step 2: Zod schema validation
     const validationResult = studyMaterialSchema.safeParse(parsedJson);
     if (!validationResult.success) {
       console.error(

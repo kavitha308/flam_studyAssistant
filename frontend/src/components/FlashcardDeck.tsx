@@ -24,12 +24,10 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
   const [reviewStatus, setReviewStatus] = useState<Record<string, CardReviewStatus>>({});
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // Reset flipped state whenever current card changes
   useEffect(() => {
     setIsFlipped(false);
   }, [currentIndex]);
 
-  // Reset entire deck state if cards array changes (e.g. new generation)
   useEffect(() => {
     setCurrentIndex(0);
     setIsFlipped(false);
@@ -37,10 +35,8 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
     setIsCompleted(false);
   }, [cards]);
 
-  // Keyboard navigation support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Prevent key handling if user is typing in an input/textarea
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
         return;
       }
@@ -80,11 +76,9 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
     };
     setReviewStatus(updated);
 
-    // Auto-advance to next card if not at end
     if (currentIndex < totalCards - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      // Reached the end of the deck
       setIsCompleted(true);
     }
   };
@@ -111,7 +105,6 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
 
   return (
     <div className="space-y-6">
-      {/* Top Header & Navigation Progress Bar */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
           <div className="flex items-center gap-2">
@@ -132,7 +125,6 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
           </div>
         </div>
 
-        {/* Progress Bar */}
         <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
           <div
             className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300"
@@ -141,7 +133,6 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
         </div>
       </div>
 
-      {/* Completion View vs Deck Active View */}
       {isCompleted ? (
         <div className="bg-white rounded-2xl border border-emerald-200 shadow-md p-8 sm:p-10 text-center space-y-6 animate-fade-in">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
@@ -185,15 +176,11 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
             >
               <HelpCircle className="w-4 h-4" />
               <span>Start Quiz</span>
-              <span className="text-[10px] uppercase font-bold bg-indigo-500 px-1.5 py-0.5 rounded text-indigo-100 ml-1">
-                Phase 4
-              </span>
             </button>
           </div>
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Active Card */}
           <Flashcard
             card={currentCard}
             isFlipped={isFlipped}
@@ -201,9 +188,7 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
             status={reviewStatus[currentCard.id]}
           />
 
-          {/* Action Controls & Navigation */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4">
-            {/* Know / Didn't Know Action Buttons */}
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <button
                 type="button"
@@ -232,7 +217,6 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ cards, onStartQuiz
               </button>
             </div>
 
-            {/* Previous / Flip / Next Deck Controls */}
             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
               <button
                 type="button"

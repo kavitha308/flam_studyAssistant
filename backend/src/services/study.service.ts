@@ -7,7 +7,6 @@ export interface StudyMaterialResponse {
 
 export class StudyService {
   public async generateStudyMaterial(text: string): Promise<{ message: string; receivedLength: number }> {
-    // Phase 1 placeholder - AI integration will be added in Phase 2
     return {
       message: 'Backend API endpoint reached successfully. AI integration will be added in Phase 2.',
       receivedLength: text.length,

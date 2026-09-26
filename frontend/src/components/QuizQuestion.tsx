@@ -26,7 +26,6 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   );
   const [isSubmitted, setIsSubmitted] = useState<boolean>(Boolean(savedAnswer));
 
-  // Reset local question state when question prop changes
   useEffect(() => {
     if (savedAnswer) {
       setSelectedOption(savedAnswer.selectedOption);
@@ -50,7 +49,6 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
-      {/* Header & Question Text */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
@@ -74,7 +72,6 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         </h3>
       </div>
 
-      {/* Answer Options */}
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="grid grid-cols-1 gap-3" role="radiogroup" aria-label="Quiz answer options">
           {question.options.map((optionText, idx) => {
@@ -136,7 +133,6 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           })}
         </div>
 
-        {/* Feedback Section (After Submit) */}
         {isSubmitted && (
           <div
             className={`p-5 rounded-xl border space-y-2 animate-fade-in ${
@@ -174,7 +170,6 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           </div>
         )}
 
-        {/* Action Controls */}
         <div className="pt-3">
           {!isSubmitted ? (
             <button

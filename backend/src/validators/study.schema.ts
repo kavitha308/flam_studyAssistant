@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Input payload schema for POST /api/study/generate
 export const generateStudyRequestSchema = z.object({
   input: z
     .string()
@@ -11,14 +10,12 @@ export const generateStudyRequestSchema = z.object({
 
 export type GenerateStudyRequestInput = z.infer<typeof generateStudyRequestSchema>;
 
-// Individual Flashcard schema
 export const flashcardSchema = z.object({
   id: z.string().min(1, 'Card id must not be empty'),
   question: z.string().min(1, 'Card question must not be empty'),
   answer: z.string().min(1, 'Card answer must not be empty'),
 });
 
-// Individual Quiz Question schema
 export const quizQuestionSchema = z.object({
   id: z.string().min(1, 'Quiz id must not be empty'),
   question: z.string().min(1, 'Quiz question must not be empty'),
@@ -33,7 +30,6 @@ export const quizQuestionSchema = z.object({
   explanation: z.string().min(1, 'Quiz explanation must not be empty'),
 });
 
-// Full AI Study Material Response Schema
 export const studyMaterialSchema = z.object({
   title: z.string().min(1, 'Study material title must not be empty'),
   summary: z.string().min(1, 'Study material summary must not be empty'),

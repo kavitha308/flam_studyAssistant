@@ -14,17 +14,14 @@ export const Quiz: React.FC<QuizProps> = ({ questions, onBackToFlashcards, onNew
   const [quizMode, setQuizMode] = useState<QuizMode>('normal');
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Original attempt answers (preserved intact!)
   const [originalAnswers, setOriginalAnswers] = useState<Record<string, UserQuizAnswer>>({});
 
-  // Active retry questions subset & active retry answers
   const [retryQuestions, setRetryQuestions] = useState<QuizQuestionType[]>([]);
   const [retryAnswers, setRetryAnswers] = useState<Record<string, UserQuizAnswer>>({});
   const [retryRound, setRetryRound] = useState<number>(0);
 
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // Reset all quiz and retry state whenever new questions arrive (new AI generation)
   useEffect(() => {
     setQuizMode('normal');
     setCurrentIndex(0);
@@ -35,7 +32,6 @@ export const Quiz: React.FC<QuizProps> = ({ questions, onBackToFlashcards, onNew
     setIsCompleted(false);
   }, [questions]);
 
-  // Defensive validation for valid quiz questions
   const validQuestions = (questions || []).filter(
     (q) =>
       q &&
@@ -80,7 +76,6 @@ export const Quiz: React.FC<QuizProps> = ({ questions, onBackToFlashcards, onNew
     );
   }
 
-  // Active questions list depending on mode
   const activeQuestions = quizMode === 'retry' ? retryQuestions : validQuestions;
   const currentQuestion = activeQuestions[currentIndex];
   const totalQuestions = activeQuestions.length;
@@ -113,17 +108,14 @@ export const Quiz: React.FC<QuizProps> = ({ questions, onBackToFlashcards, onNew
     }
   };
 
-  // Start or Continue Retry Mode on wrong questions only
   const handleStartRetry = () => {
     let wrongSubset: QuizQuestionType[] = [];
 
     if (quizMode === 'normal') {
-      // First retry round: derived from original attempt mistakes
       wrongSubset = validQuestions.filter(
         (q) => originalAnswers[q.id] && !originalAnswers[q.id].isCorrect
       );
     } else {
-      // Subsequent retry round: derived from active retry attempt mistakes
       wrongSubset = retryQuestions.filter(
         (q) => retryAnswers[q.id] && !retryAnswers[q.id].isCorrect
       );
@@ -149,7 +141,6 @@ export const Quiz: React.FC<QuizProps> = ({ questions, onBackToFlashcards, onNew
     setIsCompleted(false);
   };
 
-  // Calculate scores
   const originalCorrectCount = Object.values(originalAnswers).filter((ans) => ans.isCorrect).length;
 
   const activeCorrectCount = Object.values(currentAnswers).filter((ans) => ans.isCorrect).length;
@@ -157,7 +148,6 @@ export const Quiz: React.FC<QuizProps> = ({ questions, onBackToFlashcards, onNew
 
   return (
     <div className="space-y-6">
-      {/* Quiz Header Bar */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
