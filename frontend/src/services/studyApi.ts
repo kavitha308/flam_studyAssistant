@@ -38,14 +38,20 @@ export async function generateStudyMaterial(
       json = rawText ? JSON.parse(rawText) : {};
     } catch {
       const isHtmlError = rawText.includes('<!DOCTYPE') || rawText.includes('<html');
-      const msg = isHtmlError
-        ? `Backend service error (HTTP ${response.status}). Please verify GEMINI_API_KEY is configured in your Render Dashboard environment variables.`
-        : "We couldn't reach the study service. Please try again.";
+      let msg: string;
+
+      if (response.status === 404) {
+        msg = `Backend URL error (HTTP 404). Could not find the endpoint at "${API_BASE_URL}/study/generate". Please verify VITE_API_BASE_URL environment variable points to your Render backend URL with /api (e.g. https://your-backend.onrender.com/api) and redeploy your frontend.`;
+      } else if (isHtmlError) {
+        msg = `Backend service error (HTTP ${response.status}). Please check your Render backend logs and ensure your Render Web Service is active.`;
+      } else {
+        msg = "We couldn't reach the study service. Please try again.";
+      }
 
       return {
         success: false,
         error: {
-          code: response.status >= 500 ? `SERVER_ERROR_${response.status}` : 'SERVER_ERROR',
+          code: response.status >= 500 ? `SERVER_ERROR_${response.status}` : response.status === 404 ? 'NOT_FOUND_404' : 'SERVER_ERROR',
           message: msg,
         },
       };
